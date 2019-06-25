@@ -6,7 +6,8 @@ This package provides an object model for creating Step Functions
 ## Examples
 
 ### Simple Hello World Example
-```
+
+```python
 import py_asl
 
 def hello_world():
@@ -21,7 +22,7 @@ print(hello_world())
 
 ### Example of creating a Parallel Task
 
-```
+```python
 import py_asl
 
 def parallel_states():
