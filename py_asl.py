@@ -48,14 +48,14 @@ class StateMachine(Attrable, Dumpable):
 
     def __init__(self, **kwargs):
         super(StateMachine, self).__init__(**kwargs)
-        self._exclude_fields = ['_exclude_fields', "States"]
+        self._exclude_fields = ['_exclude_fields', 'States']
         if not hasattr(self, 'States'):
             self.States = list()
 
     def to_dict(self):
         attrs = super(StateMachine, self).to_dict()
         states = dict((state.Name, state.to_dict()) for state in self.States)
-        attrs["States"] = states
+        attrs['States'] = states
 
         return attrs
 
@@ -81,38 +81,38 @@ class TaskState(State, Dumpable):
     """
 
     def __init__(self, Name, **kwargs):
-        super(TaskState, self).__init__(Name, "Task", **kwargs)
-        self._exclude_fields = ["Name", '_exclude_fields']
+        super(TaskState, self).__init__(Name, 'Task', **kwargs)
+        self._exclude_fields = ['Name', '_exclude_fields']
 
 
 class ChoiceState(State, Dumpable):
     def __init__(self, Name, **kwargs):
-        super(ChoiceState, self).__init__(Name, "Choice", **kwargs)
-        self._exclude_fields = ["Name", '_exclude_fields']
+        super(ChoiceState, self).__init__(Name, 'Choice', **kwargs)
+        self._exclude_fields = ['Name', '_exclude_fields']
 
 
 class WaitState(State, Dumpable):
     def __init__(self, Name, **kwargs):
-        super(WaitState, self).__init__(Name, "Wait", **kwargs)
-        self._exclude_fields = ["Name", '_exclude_fields']
+        super(WaitState, self).__init__(Name, 'Wait', **kwargs)
+        self._exclude_fields = ['Name', '_exclude_fields']
 
 
 class SucceedState(State, Dumpable):
     def __init__(self, Name, **kwargs):
-        super(SucceedState, self).__init__(Name, "Succeed", **kwargs)
-        self._exclude_fields = ["Name", '_exclude_fields']
+        super(SucceedState, self).__init__(Name, 'Succeed', **kwargs)
+        self._exclude_fields = ['Name', '_exclude_fields']
 
 
 class FailState(State, Dumpable):
     def __init__(self, Name, **kwargs):
-        super(FailState, self).__init__(Name, "Fail", **kwargs)
-        self._exclude_fields = ["Name", '_exclude_fields']
+        super(FailState, self).__init__(Name, 'Fail', **kwargs)
+        self._exclude_fields = ['Name', '_exclude_fields']
 
 
 class ParallelState(State, Dumpable):
     def __init__(self, Name, **kwargs):
-        super(ParallelState, self).__init__(Name, "Parallel", **kwargs)
-        self._exclude_fields = ["Name", '_exclude_fields', 'Branches']
+        super(ParallelState, self).__init__(Name, 'Parallel', **kwargs)
+        self._exclude_fields = ['Name', '_exclude_fields', 'Branches']
         self.Branches = kwargs.get("Branches", list())
 
     def to_dict(self):
@@ -120,6 +120,12 @@ class ParallelState(State, Dumpable):
         branches = [StateMachine(StartAt=task.Name, States=[task]) for task in self.Branches]
         attrs['Banches'] = [branch.to_dict() for branch in branches]
         return attrs
+
+
+class PassState(State, Dumpable):
+    def __init__(self, Name, **kwargs):
+        super(PassState, self).__init__(Name, 'Pass', **kwargs)
+        self._exculde_fields = ['Name', '_exclude_fields']
 
 # In previous implementations of similar Object Models I've attempted to
 # use the `dataclass` decorator, but I can't remember why I chose not to
