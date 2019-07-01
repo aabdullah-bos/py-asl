@@ -125,7 +125,7 @@ class ParallelState(State, Dumpable):
 class PassState(State, Dumpable):
     def __init__(self, Name, **kwargs):
         super(PassState, self).__init__(Name, 'Pass', **kwargs)
-        self._exculde_fields = ['Name', '_exclude_fields']
+        self._exclude_fields = ['Name', '_exclude_fields']
 
 # In previous implementations of similar Object Models I've attempted to
 # use the `dataclass` decorator, but I can't remember why I chose not to

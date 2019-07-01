@@ -9,14 +9,15 @@ NAME = 'py_asl'
 DESCRIPTION = 'Python object model for the Amazon States Language'
 URL = 'https://github.com/aabdullah-bos/py-asl'
 AUTHOR = 'Aquil Abdullah'
-VERSION = '0.1.1'
+VERSION = ''
 
 here = os.path.abspath(os.path.dirname(__file__))
 # Load the package's __version__.py module as a dictionary.
 about = {}
 if not VERSION:
-    project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    with open(os.path.join(here, project_slug, '__version__.py')) as f:
+    # project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
+    # with open(os.path.join(here, project_slug, '__version__.py')) as f:
+    with open(os.path.join(here, '__version__.py')) as f:
         exec(f.read(), about)
 else:
     about['__version__'] = VERSION
