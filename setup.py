@@ -9,7 +9,7 @@ NAME = 'py_asl'
 DESCRIPTION = 'Python object model for the Amazon States Language'
 URL = 'https://github.com/aabdullah-bos/py-asl'
 AUTHOR = 'Aquil Abdullah'
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 here = os.path.abspath(os.path.dirname(__file__))
 # Load the package's __version__.py module as a dictionary.
