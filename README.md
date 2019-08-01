@@ -34,3 +34,92 @@ def parallel_states():
 
 print(parallel_states())
 ```
+
+### Arrays and Generated Templates
+
+Template variables that where place holders for arrays were tricky, so I implemented
+a workaround which is probably not suitable for all cases...Let's say that
+you have to deploy a Step Function that has a task that invokes an ECS/Fargate
+task and you need to specify the VPC configuration. In this case you will need
+to supply parameters that include a list of subnets and a list of Security Groups.
+
+Your code might look like this:
+
+```python
+import py_asl
+
+Parameters = {"Cluster": "${cluster_arn}",
+              "TaskDefinition": "${task_definition_arn}",
+              "LaunchType": "FARGATE",
+              "NetworkConfiguration": {"AwsvpcConfiguration": {
+                                                               "SecurityGroups": "[${security_groups}]",
+                                                               "Subnets": "[${subnets}]"
+                                                              }
+                                       }
+              }
+
+task = py_asl.TaskState("Run Fargate",
+                        Resource="arn:aws:states:::ecs:runTask.sync",
+                        End=True,
+                        Parameters=Parameters)
+
+state_machine = py_asl.StateMachine(Comment="Step Function to Test Invoking ECS/Fargate Task",
+                                    StartAt="Run Fargate",
+                                    States=[task])
+
+if __name__ == '__main__':
+    print(state_machine.dumps(indent=2))
+```
+
+**NOTE:** The arrays for the security groups will be transformed into:
+```JSON
+{
+  "Comment": "Step Function to Test Invoking ECS/Fargate Task",
+  "StartAt": "Run Fargate",
+  "States": {
+    "Run Fargate": {
+      "Resource": "arn:aws:states:::ecs:runTask.sync",
+      "End": true,
+      "Parameters": {
+        "Cluster": "${cluster_arn}",
+        "TaskDefinition": "${task_definition_arn}",
+        "LaunchType": "FARGATE",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "SecurityGroups": ${security_groups},
+            "Subnets": ${subnets}
+          }
+        }
+      },
+      "Type": "Task"
+    }
+  }
+}
+```
+
+It is expected that your Terraform code supplies and array. For example,
+
+```
+variable "security_groups" {
+    type = "list"
+    default = ["ab-12345", "bc-56788"]
+}
+
+variable "subnets" {
+    type = "list"
+    default = ["itsy", "bitsy"]
+}
+```
+
+When replacing values in the template you can use:
+
+```
+data "template_file" "step_function" {
+    template = "${file("${path.module}/step-function.json.tpl")}"
+    vars = {
+        ...
+        security_groups = "${jsonencode(var.cluster_security_groups)}"
+        subnets = "${jsonencode(var.cluster_subnets)}"
+    }
+}
+```
