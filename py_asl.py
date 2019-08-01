@@ -1,4 +1,5 @@
 import json
+import re
 
 """
 Object Model for Amazon States Language
@@ -8,6 +9,17 @@ NOTES:
 - [awslabs/statelint - Ruby States Language Validator](https://github.com/awslabs/statelint)
 - [Amazon States Language](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-amazon-states-language.html)
 """
+
+
+def filter_arrays(template_string):
+    array_pattern = r'\"\[(?P<temp_var>\$\{[a-zA-Z_-]*\})]"'
+    var_pattern = r'\"\[\$\{[a-zA-Z_-]*\}]"'
+    arrays = re.findall(array_pattern, template_string)
+    to_replace = re.findall(var_pattern, template_string)
+    mappings = zip(to_replace, arrays)
+    for k, v in mappings:
+        template_string = template_string.replace(k, v)
+    return template_string
 
 
 class Dumpable(object):
@@ -28,7 +40,9 @@ class Dumpable(object):
         configuraiton schema
         """
         config = self.to_dict()
-        return json.dumps(config, indent=indent)
+        template_string = json.dumps(config, indent=indent)
+        filtered = filter_arrays(template_string)
+        return filtered
 
 
 class Attrable(object):
