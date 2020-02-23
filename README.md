@@ -97,7 +97,7 @@ if __name__ == '__main__':
 }
 ```
 
-It is expected that your Terraform code supplies and array. For example,
+It is expected that your Terraform code supplies an array. For example,
 
 ```
 variable "security_groups" {
