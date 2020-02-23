@@ -37,7 +37,7 @@ print(parallel_states())
 
 ### Arrays and Generated Templates
 
-Template variables that where place holders for arrays were tricky, so I implemented
+Template variables that were place holders for arrays were tricky, so I implemented
 a workaround which is probably not suitable for all cases...Let's say that
 you have to deploy a Step Function that has a task that invokes an ECS/Fargate
 task and you need to specify the VPC configuration. In this case you will need
