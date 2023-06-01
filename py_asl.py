@@ -132,7 +132,7 @@ class ParallelState(State, Dumpable):
     def to_dict(self):
         attrs = super(ParallelState, self).to_dict()
         branches = [StateMachine(StartAt=task.Name, States=[task]) for task in self.Branches]
-        attrs['Banches'] = [branch.to_dict() for branch in branches]
+        attrs['Branches'] = [branch.to_dict() for branch in branches]
         return attrs
 
 
